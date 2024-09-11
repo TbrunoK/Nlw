@@ -56,3 +56,8 @@ Operadores (atribuição, concatenação, matemáticos, lógicos)
     - [X] criar, passar argumento
     - [X] executar
     - [X] arrow function /named function
+
+
+# Estrutura de repetição
+
+- [X] while

@@ -1,15 +1,15 @@
 # Nlw Pocket
 
-## Linguagem de programação
+## Linguagem de programação:
 
     Maneira de dar instrução ao computador
     Como um lego, você irá utilizar peças para criar algoritmos, ou seja, para resolver problemas
 
-## Algoritmos
+## Algoritmos:
 
     sequencia de passos lógicos e finita para resolução de um problema
 
-## Peças de uma linguagem
+## Peças de uma linguagem:
 
     Comentários
     Declarações de variáveis (const, let)
@@ -18,48 +18,57 @@
     estrutura de dados (function, object, array)
     controle de fluxo (if/else)
 
-## Fases da resolução de um problema
+## Fases da resolução de um problema:
 
-    - [] Coletar dados
-    - [] Processar dados (Manipular, alterar...)
-    - [] Apresentar os dados
+- [] Coletar dados
+- [] Processar dados (Manipular, alterar...)
+- [] Apresentar os dados
 
-## Escopo e variáveis
+## Escopo e variáveis:
 
-    - [x] variáveis globais e locais
-    - [x] constantes
+- [x] variáveis globais e locais
+- [x] constantes
 
-## Tipos de dados
+## Tipos de dados:
 
-    - [X] Strings (texto) "" '' ``
-    - [X] Number 1 2.4
-    - [X] Boolean: true, false
+- [x] Strings (texto) "" '' ``
+- [x] Number 1 2.4
+- [x] Boolean: true, false
 
-## Operadores
+## Operadores:
 
-    - [X] Operadores de atribuição de valor =
-    - [X] Operadores de concatenação +
+- [x] Operadores de atribuição de valor =
+- [x] Operadores de concatenação +
 
-## Estrutura de dados
+## Estrutura de dados:
 
 ### Array:
 
 ### Objetos:
 
-      - [X] Atributos e Métodos
-      - [X] Criação e manipulação de objetos
-      - [X] Acesso a propriedades de objetos
+- [x] Atributos e Métodos
+- [x] Criação e manipulação de objetos
+- [x] Acesso a propriedades de objetos
 
 ### Functions:
 
-      - [X] criar, passar argumento
-      - [X] executar
-      - [X] arrow function /named function
+- [x] criar, passar argumento
+- [x] executar
+- [x] arrow function /named function
 
-# Estrutura de repetição
+# Estrutura de repetição:
 
-    - [X] while
+- [x] while
 
-# Condicionais
+# Condicionais:
 
-    - [X] switch
+- [x] switch
+
+## Módulos em Node.js:
+
+- [x] Importação de módulos (require, commonJS)
+- [x] Biblioteca 'inquirer' para criar prompts interativos
+
+## Programação assíncrona e Promises:
+
+- [x] uso de funções assíncronas (async/await)

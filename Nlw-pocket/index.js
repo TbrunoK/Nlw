@@ -35,15 +35,16 @@ const listarMetas = async () => {
     instructions: false, // Não mostrar instruções adicionais
   })
 
+  // Desmarca cada metas
+  metas.forEach((m) => {
+    m.checked = false
+  })
+
   // Verifica se nenhuma meta foi selecionada
   if (respostas.length == 0) {
     console.log("Nenhuma meta Selecionada!")
     return // Sai da função se não houver seleção
   }
-  // Desmarca cada metas
-  metas.forEach((m) => {
-    m.checked = false
-  })
 
   // Itera sobre as respostas selecionadas
   respostas.forEach((resposta) => {

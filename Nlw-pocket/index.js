@@ -60,6 +60,22 @@ const listarMetas = async () => {
   console.log("Meta(s) marcadas como  concluída(s)")
 }
 
+const metasRealizadas = async () => {
+  const realizadas = metas.filter((meta) => {
+    return meta.checked
+  })
+
+  if (realizadas.length == 0) {
+    console.log("Não existem metas realizadas! :/")
+    return
+  }
+
+  await select({
+    message: "Metas Realizadas",
+    choices: [...realizadas],
+  })
+}
+
 // Função principal que controla o menu
 const start = async () => {
   // Loop que mantém o menu ativo
@@ -75,6 +91,10 @@ const start = async () => {
         {
           name: "Listar Metas", // Nome da opção no menu
           value: "listar", // Valor ajustado para 'listar' para corresponder à verificação
+        },
+        {
+          name: "Metas realizadas", // Nome da opção no menu
+          value: "realizadas", // Valor ajustado para 'listar' para corresponder à verificação
         },
         {
           name: "Sair", // Nome da opção no menu
@@ -94,6 +114,9 @@ const start = async () => {
         // Chama a função de listagem de metas
         await listarMetas()
         console.log("Vamos listar")
+        break
+      case "realizadas":
+        await metasRealizadas()
         break
       case "sair":
         // Exibe mensagem de despedida e encerra o loop

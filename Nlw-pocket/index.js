@@ -72,7 +72,7 @@ const metasRealizadas = async () => {
   }
 
   await select({
-    message: "Metas Realizadas " + realizadas.length,
+    message: "Metas Realizadas: " + realizadas.length,
     choices: [...realizadas],
   })
 }
@@ -88,9 +88,34 @@ const metasAbertas = async () => {
   }
 
   await select({
-    message: "Metas Abertas " + abertas.length,
+    message: "Metas Abertas: " + abertas.length,
     choices: [...abertas],
   })
+}
+// Função deletar metas
+const deletarMetas = async () => {
+  const metasDesmarcadas = metas.map((meta) => {
+    return { value: meta.value, checked: false }
+  })
+
+  const itensADeletar = await checkbox({
+    message: "Selecionar itens para deletar",
+    choices: metasDesmarcadas,
+    instructions: false,
+  })
+
+  if (itensADeletar.length == 0) {
+    console.log("Nenhum item selecionado para deletar!")
+    return
+  }
+
+  itensADeletar.forEach((item) => {
+    metas.filter((meta) => {
+      return meta.value != item
+    })
+  })
+
+  console.log("Meta(s) deletada(s) com sucesso!")
 }
 
 // Função principal que controla o menu
@@ -118,6 +143,10 @@ const start = async () => {
           value: "abertas", // Valor ajustado para 'listar' para corresponder à verificação
         },
         {
+          name: "Deletar metas", //Nome da opção deletar
+          value: "deletar", // valor ajudado para deletar as metas
+        },
+        {
           name: "Sair", // Nome da opção no menu
           value: "sair", // Valor retornado quando a opção é selecionada
         },
@@ -141,6 +170,9 @@ const start = async () => {
         break
       case "abertas":
         await metasAbertas()
+        break
+      case "deletar":
+        await deletarMetas()
         break
       case "sair":
         // Exibe mensagem de despedida e encerra o loop

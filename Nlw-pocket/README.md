@@ -20,9 +20,9 @@
 
 ## Fases da resolução de um problema:
 
-- [] Coletar dados
-- [] Processar dados (Manipular, alterar...)
-- [] Apresentar os dados
+- [x] Coletar dados
+- [x] Processar dados (Manipular, alterar...)
+- [x] Apresentar os dados
 
 ## Escopo e variáveis:
 
@@ -39,11 +39,14 @@
 
 - [x] Operadores de atribuição de valor =
 - [x] Operadores de concatenação +
-- [x]  Operadores de comparação: <, >, <=, >=, !=
+- [x] Operadores de comparação: <, >, <=, >=, !=
 
 ## Estrutura de dados:
 
 ### Array:
+
+[x] Uma lista que contém qualquer tipo de dado
+[x] Métodos de array: push, find, forEach
 
 ### Objetos:
 

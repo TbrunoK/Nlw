@@ -1,16 +1,27 @@
 // Importa as funções 'select', 'input' e 'checkbox' da biblioteca '@inquirer/prompts'
 const { select, input, checkbox } = require("@inquirer/prompts")
+const fs = require("fs").promises
 
+// Mensagem de boas vindas :)
 let mensagem = "Bem vindo ao app de metas"
 
-// Objeto que representa uma meta inicial
-let meta = {
-  value: "Tomar 3L de água por dia", // Descrição da meta
-  checked: false, // Status da meta (concluída ou não)
+// Lista de metas
+let metas
+
+// Função para carregar as metas do arquivo
+const carregarMetas = async () => {
+  try {
+    const dados = await fs.readFile("metas.json", "utf-8")
+    metas = JSON.parse(dados)
+  } catch (error) {
+    metas = [] // Inicializa vazio se não existir o arquivo
+  }
 }
 
-// Lista de metas, inicialmente contendo apenas a meta acima
-let metas = [meta]
+// Função para salvar as metas no arquivo
+const salvarMetas = async () => {
+  await fs.writeFile("metas.json", JSON.stringify(metas, null, 2))
+}
 
 // Função assíncrona para cadastrar uma nova meta
 const cadastrarMeta = async () => {
@@ -25,12 +36,18 @@ const cadastrarMeta = async () => {
 
   // Adiciona a nova meta à lista de metas
   metas.push({ value: meta, checked: false })
-
-  mensagem = "Meta Cadastrada com Sucesso!"
+  mensagem = "Meta cadastrada com sucesso!"
+  await salvarMetas() // Salva a meta após o cadastro
 }
 
 // Função assíncrona para listar e marcar metas
 const listarMetas = async () => {
+  // Verifica se há metas disponíveis
+  if (metas.length === 0) {
+    mensagem = "Não há metas para listar!"
+    return
+  }
+
   // Apresenta as metas ao usuário com a opção de selecionar
   const respostas = await checkbox({
     message:
@@ -39,7 +56,7 @@ const listarMetas = async () => {
     instructions: false, // Não mostrar instruções adicionais
   })
 
-  // Desmarca cada metas
+  // Desmarca todas as metas
   metas.forEach((m) => {
     m.checked = false
   })
@@ -62,13 +79,11 @@ const listarMetas = async () => {
   })
 
   // Exibe uma mensagem de conclusão
-  mensagem = "Meta(s) marcadas como  concluída(s)"
+  mensagem = "Meta(s) marcadas como concluída(s)"
+  await salvarMetas() // Salva as mudanças
 }
-
 const metasRealizadas = async () => {
-  const realizadas = metas.filter((meta) => {
-    return meta.checked
-  })
+  const realizadas = metas.filter((meta) => meta.checked)
 
   if (realizadas.length == 0) {
     mensagem = "Não existem metas realizadas! :/"
@@ -82,12 +97,10 @@ const metasRealizadas = async () => {
 }
 
 const metasAbertas = async () => {
-  const abertas = metas.filter((meta) => {
-    return meta.checked != true
-  })
+  const abertas = metas.filter((meta) => !meta.checked)
 
   if (abertas.length == 0) {
-    mensagem = "Não existe metas em aberto! :)"
+    mensagem = "Não existem metas em aberto! :)"
     return
   }
 
@@ -96,11 +109,17 @@ const metasAbertas = async () => {
     choices: [...abertas],
   })
 }
-// Função deletar metas
+
 const deletarMetas = async () => {
-  const metasDesmarcadas = metas.map((meta) => {
-    return { value: meta.value, checked: false }
-  })
+  if (metas.length === 0) {
+    mensagem = "Não há metas para deletar!"
+    return
+  }
+
+  const metasDesmarcadas = metas.map((meta) => ({
+    value: meta.value,
+    checked: false,
+  }))
 
   const itensADeletar = await checkbox({
     message: "Selecionar itens para deletar",
@@ -113,12 +132,13 @@ const deletarMetas = async () => {
     return
   }
 
-  // Atualiza a lista de metas, filtrando as que não foram selecionadas para deletar
   metas = metas.filter((meta) => !itensADeletar.includes(meta.value))
 
   mensagem = "Meta(s) deletada(s) com sucesso!"
+  await salvarMetas()
 }
 
+// Função para exibir mensagens
 const mostrarMensagem = () => {
   console.clear()
 
@@ -131,50 +151,32 @@ const mostrarMensagem = () => {
 
 // Função principal que controla o menu
 const start = async () => {
+  await carregarMetas()
+
   // Loop que mantém o menu ativo
   while (true) {
     mostrarMensagem()
+
     // Apresenta o menu ao usuário e captura a escolha
     const opcao = await select({
       message: "Menu >", // Mensagem exibida no menu
       choices: [
-        {
-          name: "Cadastrar metas", // Nome da opção no menu
-          value: "cadastrar", // Valor retornado quando a opção é selecionada
-        },
-        {
-          name: "Listar Metas", // Nome da opção no menu
-          value: "listar", // Valor ajustado para 'listar' para corresponder à verificação
-        },
-        {
-          name: "Metas realizadas", // Nome da opção no menu
-          value: "realizadas", // Valor ajustado para 'listar' para corresponder à verificação
-        },
-        {
-          name: "Metas abertas", // Nome da opção no menu
-          value: "abertas", // Valor ajustado para 'listar' para corresponder à verificação
-        },
-        {
-          name: "Deletar metas", //Nome da opção deletar
-          value: "deletar", // valor ajudado para deletar as metas
-        },
-        {
-          name: "Sair", // Nome da opção no menu
-          value: "sair", // Valor retornado quando a opção é selecionada
-        },
+        { name: "Cadastrar metas", value: "cadastrar" },
+        { name: "Listar Metas", value: "listar" },
+        { name: "Metas realizadas", value: "realizadas" },
+        { name: "Metas abertas", value: "abertas" },
+        { name: "Deletar metas", value: "deletar" },
+        { name: "Sair", value: "sair" },
       ],
     })
 
     // Verifica qual opção foi selecionada
     switch (opcao) {
       case "cadastrar":
-        // Chama a função de cadastro de metas
         await cadastrarMeta()
         break
       case "listar":
-        // Chama a função de listagem de metas
         await listarMetas()
-        console.log("Vamos listar")
         break
       case "realizadas":
         await metasRealizadas()
@@ -186,7 +188,6 @@ const start = async () => {
         await deletarMetas()
         break
       case "sair":
-        // Exibe mensagem de despedida e encerra o loop
         console.log("Até a próxima!")
         return // Sai da função, encerrando o programa
     }

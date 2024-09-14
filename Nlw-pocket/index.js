@@ -1,6 +1,8 @@
 // Importa as funções 'select', 'input' e 'checkbox' da biblioteca '@inquirer/prompts'
 const { select, input, checkbox } = require("@inquirer/prompts")
 
+let mensagem = "Bem vindo ao app de metas"
+
 // Objeto que representa uma meta inicial
 let meta = {
   value: "Tomar 3L de água por dia", // Descrição da meta
@@ -17,12 +19,14 @@ const cadastrarMeta = async () => {
 
   // Verifica se a meta está vazia
   if (meta.length == 0) {
-    console.log("A meta não pode ser vazia.")
-    return cadastrarMeta() // Chama a função novamente caso esteja vazia
+    mensagem = "A meta não pode ser vazia."
+    return
   }
 
   // Adiciona a nova meta à lista de metas
   metas.push({ value: meta, checked: false })
+
+  mensagem = "Meta Cadastrada com Sucesso!"
 }
 
 // Função assíncrona para listar e marcar metas
@@ -42,7 +46,7 @@ const listarMetas = async () => {
 
   // Verifica se nenhuma meta foi selecionada
   if (respostas.length == 0) {
-    console.log("Nenhuma meta Selecionada!")
+    mensagem = "Nenhuma meta Selecionada!"
     return // Sai da função se não houver seleção
   }
 
@@ -58,7 +62,7 @@ const listarMetas = async () => {
   })
 
   // Exibe uma mensagem de conclusão
-  console.log("Meta(s) marcadas como  concluída(s)")
+  mensagem = "Meta(s) marcadas como  concluída(s)"
 }
 
 const metasRealizadas = async () => {
@@ -67,7 +71,7 @@ const metasRealizadas = async () => {
   })
 
   if (realizadas.length == 0) {
-    console.log("Não existem metas realizadas! :/")
+    mensagem = "Não existem metas realizadas! :/"
     return
   }
 
@@ -83,7 +87,7 @@ const metasAbertas = async () => {
   })
 
   if (abertas.length == 0) {
-    console.log("Não existe metas em aberto! :)")
+    mensagem = "Não existe metas em aberto! :)"
     return
   }
 
@@ -105,23 +109,31 @@ const deletarMetas = async () => {
   })
 
   if (itensADeletar.length == 0) {
-    console.log("Nenhum item selecionado para deletar!")
+    mensagem = "Nenhum item selecionado para deletar!"
     return
   }
 
-  itensADeletar.forEach((item) => {
-    metas.filter((meta) => {
-      return meta.value != item
-    })
-  })
+  // Atualiza a lista de metas, filtrando as que não foram selecionadas para deletar
+  metas = metas.filter((meta) => !itensADeletar.includes(meta.value))
 
-  console.log("Meta(s) deletada(s) com sucesso!")
+  mensagem = "Meta(s) deletada(s) com sucesso!"
+}
+
+const mostrarMensagem = () => {
+  console.clear()
+
+  if (mensagem != "") {
+    console.log(mensagem)
+    console.log("")
+    mensagem = ""
+  }
 }
 
 // Função principal que controla o menu
 const start = async () => {
   // Loop que mantém o menu ativo
   while (true) {
+    mostrarMensagem()
     // Apresenta o menu ao usuário e captura a escolha
     const opcao = await select({
       message: "Menu >", // Mensagem exibida no menu
@@ -158,7 +170,6 @@ const start = async () => {
       case "cadastrar":
         // Chama a função de cadastro de metas
         await cadastrarMeta()
-        console.log(metas) // Exibe as metas após o cadastro
         break
       case "listar":
         // Chama a função de listagem de metas
